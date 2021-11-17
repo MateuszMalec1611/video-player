@@ -6,15 +6,15 @@ import { useUser } from './hooks/useUser';
 
 const App = () => {
     const {
-        userState: {
-            authorizationToken: { Token },
-        },
+        userState: { authorization },
     } = useUser();
+
+    const auth = authorization?.isAuthorized;
 
     return (
         <Container>
             <Routes>
-                <Route path="/" element={Token ? <Home /> : <Navigate to="/signIn" />} />
+                <Route path="/" element={auth ? <Home /> : <Navigate to="/signIn" />} />
                 <Route path="/signIn" element={<SplashScreen />} />
             </Routes>
         </Container>
