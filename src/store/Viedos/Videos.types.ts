@@ -11,8 +11,8 @@ export interface VideosState {
 export type Video = {
     Title: string;
     Description: string;
-    Duration: number;
     Id: number;
+    Guid: string;
     Images: {
         Url: string;
         MediaId: number;

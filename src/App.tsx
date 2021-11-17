@@ -17,6 +17,10 @@ const App = () => {
             <Container>
                 <Routes>
                     <Route path="/" element={auth ? <Home /> : <Navigate to="/signIn" />} />
+                    <Route
+                        path="/video-detail"
+                        element={auth ? <Home /> : <Navigate to="/signIn" />}
+                    />
                     <Route path="/signIn" element={<SplashScreen />} />
                 </Routes>
             </Container>
