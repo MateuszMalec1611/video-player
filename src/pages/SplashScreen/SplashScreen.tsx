@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import Loader from 'src/Components/Loader/Loader';
-import { useUser } from 'src/useUser';
+import { useUser } from 'src/hooks/useUser';
 import * as S from './styles';
 
 const SplashScreen = () => {
