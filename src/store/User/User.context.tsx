@@ -1,19 +1,13 @@
-import React, { createContext, useCallback, useEffect, useReducer } from 'react';
+import axios from 'axios';
+import React, { createContext, useCallback, useReducer } from 'react';
 import { signInUser } from './User.services';
 import { ProviderValue, UserActions, UserActionTypes, UserState } from './User.types';
 
 export const UserContext = createContext({} as ProviderValue);
 
 const initialState: UserState = {
-    authorizationToken: {
-        Token: null,
-        TokenExpires: null,
-    },
-    user: {
-        FullName: '',
-        id: null,
-        UserName: '',
-    },
+    authorization: undefined,
+    user: undefined,
     loading: false,
 };
 
@@ -22,7 +16,10 @@ const reducer = (state: UserState, action: UserActions) => {
         case UserActionTypes.SET_USER:
             return {
                 ...state,
-                authorizationToken: action.payload.authorizationToken,
+                authorization: {
+                    isAuthorized: action.payload.authorization!.isAuthorized,
+                    TokenExpires: action.payload.authorization!.TokenExpires,
+                },
                 user: action.payload.user,
             };
         case UserActionTypes.SET_LOADING:
@@ -41,12 +38,23 @@ const UserProvider: React.FC = ({ children }) => {
     const handleSignInUser = useCallback(async () => {
         try {
             userDispatch({ type: UserActionTypes.SET_LOADING, payload: true });
-
             const user = await signInUser();
+
+            if (user.AuthorizationToken) {
+                axios.defaults.headers.common[
+                    'Authorization'
+                ] = `Bearer ${user.AuthorizationToken.Token}`;
+            }
 
             userDispatch({
                 type: UserActionTypes.SET_USER,
-                payload: { authorizationToken: user.AuthorizationToken, user: user.User },
+                payload: {
+                    user: user.User,
+                    authorization: {
+                        isAuthorized: true,
+                        TokenExpires: user.AuthorizationToken.TokenExpires,
+                    },
+                },
             });
         } catch (err: any) {
             console.log(err);
@@ -55,12 +63,10 @@ const UserProvider: React.FC = ({ children }) => {
         }
     }, []);
 
-    useEffect(() => {
-        handleSignInUser();
-    }, [handleSignInUser]);
-
     return (
-        <UserContext.Provider value={{ userState, userDispatch }}>{children}</UserContext.Provider>
+        <UserContext.Provider value={{ userState, userDispatch, handleSignInUser }}>
+            {children}
+        </UserContext.Provider>
     );
 };
 

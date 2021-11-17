@@ -1,13 +1,34 @@
 export type ProviderValue = {
     userState: UserState;
     userDispatch: (action: UserActions) => void;
+    handleSignInUser: () => Promise<void>;
 };
 
 export interface UserState {
-    authorizationToken: AuthorizationToken;
+    authorization: Authorization;
     user: User;
     loading: boolean;
 }
+
+export type User =
+    | {
+          FullName: string;
+          id: number;
+          UserName: string;
+      }
+    | undefined;
+
+export type Authorization =
+    | {
+          isAuthorized: boolean;
+          TokenExpires: string;
+      }
+    | undefined;
+
+export type AuthorizationToken = {
+    Token: string;
+    TokenExpires: string;
+};
 
 export interface SignInApiResponse {
     AuthorizationToken: AuthorizationToken;
@@ -15,21 +36,10 @@ export interface SignInApiResponse {
     status: number;
 }
 
-export type User = {
-    FullName: string;
-    id: number | null;
-    UserName: string;
-};
-
-export type AuthorizationToken = {
-    Token: string | null;
-    TokenExpires: string | null;
-};
-
 export type SetUser = {
     type: UserActionTypes.SET_USER;
     payload: {
-        authorizationToken: AuthorizationToken;
+        authorization: Authorization;
         user: User;
     };
 };
