@@ -5,7 +5,7 @@ export type ProviderValue = {
 
 export interface VideosState {
     videos: Video[];
-    videoDetail: Video | undefined;
+    videoDetail: VideoDetail | undefined;
     loading: boolean;
 }
 
@@ -27,7 +27,7 @@ export interface VideoDetail extends Video {
         PersonFullName: string;
         PersonId: number;
         PersonRoleCode: string;
-    };
+    }[];
 }
 
 export type SetVideos = {
