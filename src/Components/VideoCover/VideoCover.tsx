@@ -12,8 +12,7 @@ const VideoCover: React.FC<VideoCoverProps> = ({ video }) => {
     const { Title } = video;
     const imageUrl = video.Images.find(img => img.ImageTypeCode === 'FRAME');
 
-    const handleRedirect = () =>
-        navigate(`/video-detail?id=${video.Id}&Guid=${video.Guid}`, { replace: true });
+    const handleRedirect = () => navigate(`/video-detail/${video.Id}`, { replace: true });
 
     return (
         <S.GameCard onClick={handleRedirect}>

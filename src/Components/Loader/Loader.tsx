@@ -1,9 +1,13 @@
 import { CircularProgress } from '@mui/material';
 import { Box } from './styled';
 
-const Loader = () => {
+interface LoaderProps {
+    margin?: string;
+}
+
+const Loader: React.FC<LoaderProps> = ({ margin }) => {
     return (
-        <Box>
+        <Box margin={margin}>
             <CircularProgress />
         </Box>
     );

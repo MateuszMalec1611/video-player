@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import api from 'src/api';
-import { Video } from './Videos.types';
+import { Video, VideoDetail } from './Videos.types';
 
 export const fetchVideos = async () => {
     const response: AxiosResponse<{ Entities: Video[] }> = await api().post('Media/GetMediaList', {
@@ -13,4 +13,16 @@ export const fetchVideos = async () => {
     });
 
     return response.data.Entities ?? [];
+};
+export const fetchVideoDetail = async (id: number) => {
+    const response: AxiosResponse<VideoDetail> = await api().post('Media/GetMedia', {
+        MediaId: id,
+        IncludeCategories: true,
+        IncludePeople: true,
+        IncludeImages: true,
+        IncludeSimilarMedia: true,
+        IncludePurchaseOffers: true,
+    });
+
+    return response.data;
 };

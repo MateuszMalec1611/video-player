@@ -1,25 +1,31 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import SplashScreen from './pages/SplashScreen/SplashScreen';
 import { Container } from './styles';
-import { useUser } from './hooks/useUser';
 import Layout from './Components/Layout/Layout';
+import VideoDetail from './pages/VideoDetail/VideoDetail';
+import RequireAuth from './Components/RequireAuth/RequirePath';
 
 const App = () => {
-    const {
-        userState: { authorization },
-    } = useUser();
-
-    const auth = authorization?.isAuthorized;
-
     return (
         <Layout>
             <Container>
                 <Routes>
-                    <Route path="/" element={auth ? <Home /> : <Navigate to="/signIn" />} />
                     <Route
-                        path="/video-detail"
-                        element={auth ? <Home /> : <Navigate to="/signIn" />}
+                        path="/"
+                        element={
+                            <RequireAuth>
+                                <Home />
+                            </RequireAuth>
+                        }
+                    />
+                    <Route
+                        path="/video-detail/:id"
+                        element={
+                            <RequireAuth>
+                                <VideoDetail />
+                            </RequireAuth>
+                        }
                     />
                     <Route path="/signIn" element={<SplashScreen />} />
                 </Routes>
