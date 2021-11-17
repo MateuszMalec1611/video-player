@@ -40,7 +40,7 @@ const Home = () => {
     ));
 
     return (
-        <Grid container>
+        <Grid container style={{ marginTop: 20 }}>
             {!loading && videosList}
             {loading && <Loader />}
         </Grid>

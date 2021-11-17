@@ -9,9 +9,11 @@ interface VideoCoverProps {
 const VideoCover: React.FC<VideoCoverProps> = ({ video }) => {
     const { Title } = video;
 
+    const imageUrl = video.Images.find(img => img.ImageTypeCode === 'FRAME');
+
     return (
         <S.GameCard>
-            {/* <S.Image component="img" height="160" image={``} alt={Title} /> */}
+            <S.Image component="img" height="160" image={imageUrl?.Url} alt={Title} />
             <CardContent>
                 <S.Title>{Title}</S.Title>
             </CardContent>

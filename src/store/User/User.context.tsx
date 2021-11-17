@@ -1,7 +1,7 @@
+import axios from 'axios';
 import React, { createContext, useCallback, useReducer } from 'react';
 import { signInUser } from './User.services';
 import { ProviderValue, UserActions, UserActionTypes, UserState } from './User.types';
-import axios from 'axios';
 
 export const UserContext = createContext({} as ProviderValue);
 
