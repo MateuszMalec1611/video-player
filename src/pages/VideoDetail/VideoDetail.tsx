@@ -23,7 +23,7 @@ const VideoDetail = () => {
     const [showVideo, setShowVideo] = useState(false);
     const [videoPlayerError, setVideoPlayerError] = useState('');
     const {
-        videosState: { videoDetail, videoPlayer, prevVideoDetailId, prevVideoId },
+        videosState: { videoDetail, videoPlayer, prevVideoDetailId, prevVideoPlayer },
         videosDispatch,
     } = useVideos();
     const {
@@ -49,10 +49,10 @@ const VideoDetail = () => {
 
     const handleShowVideo = async (id: string | undefined, streamType: StreamType) => {
         handleModal();
-        if (prevVideoId === +id!) return;
+        setVideoPlayerError('');
+        if (prevVideoPlayer?.id === +id! && prevVideoPlayer.streamType === streamType) return;
         if (streamType === StreamType.MAIN && userGuest) navigate('/auth', { replace: false });
         try {
-            setVideoPlayerError('');
             setVideoPlayerLoading(true);
 
             const videoPlayerToSet = await fetchVideoPlayer(+id!, streamType);
@@ -61,7 +61,7 @@ const VideoDetail = () => {
 
             videosDispatch({
                 type: VideosActionTypes.SET_VIDEO_PLAYER,
-                payload: videoPlayerToSet,
+                payload: { videoPlayer: videoPlayerToSet, streamType },
             });
         } catch (err: any) {
             if (err.response?.status === 403) {

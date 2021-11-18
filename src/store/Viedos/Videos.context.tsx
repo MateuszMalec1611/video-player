@@ -10,7 +10,7 @@ const initialState: VideosState = {
     loading: false,
     prevVideosListId: undefined,
     prevVideoDetailId: undefined,
-    prevVideoId: undefined,
+    prevVideoPlayer: undefined,
 };
 
 const reducer = (state: VideosState, action: VideosActions) => {
@@ -28,7 +28,14 @@ const reducer = (state: VideosState, action: VideosActions) => {
                 prevVideoDetailId: action.payload.Id,
             };
         case VideosActionTypes.SET_VIDEO_PLAYER:
-            return { ...state, videoPlayer: action.payload, prevVideoId: action.payload.MediaId };
+            return {
+                ...state,
+                videoPlayer: action.payload.videoPlayer,
+                prevVideoPlayer: {
+                    id: action.payload.videoPlayer.MediaId,
+                    streamType: action.payload.streamType,
+                },
+            };
         case VideosActionTypes.SET_LOADING:
             return {
                 ...state,

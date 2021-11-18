@@ -10,7 +10,7 @@ export interface VideosState {
     loading: boolean;
     prevVideosListId: undefined | VideosListId;
     prevVideoDetailId: undefined | number;
-    prevVideoId: undefined | number;
+    prevVideoPlayer: { id: number; streamType: StreamType } | undefined;
 }
 
 export interface Video {
@@ -57,7 +57,7 @@ export type SetVideoDetail = {
 
 export type SetVideoPlayer = {
     type: VideosActionTypes.SET_VIDEO_PLAYER;
-    payload: VideoPlayer;
+    payload: { videoPlayer: VideoPlayer; streamType: StreamType };
 };
 
 export type SetLoading = {
