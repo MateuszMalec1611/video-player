@@ -1,3 +1,4 @@
+import { device } from 'src/utils/constants';
 import styled, { css } from 'styled-components';
 
 interface burgerProps {
@@ -16,6 +17,10 @@ export const HamburgerComponent = styled.div<burgerProps>`
     height: 40px;
     cursor: pointer;
     z-index: 1;
+
+    @media ${device.tabletBreakpoint} {
+        display: none;
+    }
 
     &::before,
     &::after {

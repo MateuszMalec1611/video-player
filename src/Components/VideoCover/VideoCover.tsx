@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router';
 import { CardContent } from '@mui/material';
 import { Video } from 'src/store/Viedos/Videos.types';
 import * as S from './styles';
+import { setCoverImg } from 'src/utils/helpers';
 
 interface VideoCoverProps {
     video: Video;
@@ -10,14 +11,17 @@ interface VideoCoverProps {
 const VideoCover: React.FC<VideoCoverProps> = ({ video }) => {
     const navigate = useNavigate();
     const { Title } = video;
-    const imageUrl = video.Images.find(img => img.ImageTypeCode === 'FRAME');
 
-    const handleRedirect = () =>
-        navigate(`/video-detail?id=${video.Id}&Guid=${video.Guid}`, { replace: true });
+    const handleRedirect = () => navigate(`/video-detail/${video.Id}`, { replace: false });
 
     return (
         <S.GameCard onClick={handleRedirect}>
-            <S.Image component="img" height="160" image={imageUrl?.Url} alt={`${Title} image`} />
+            <S.Image
+                component="img"
+                height="160"
+                image={setCoverImg(video)}
+                alt={`${Title} image`}
+            />
             <CardContent>
                 <S.Title>{Title}</S.Title>
             </CardContent>

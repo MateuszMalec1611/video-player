@@ -25,7 +25,7 @@ const Navigation: React.FC<NavigationProps> = () => {
                         Home
                     </S.Link>
                     <S.Link onClick={handleMenu} to="/list2">
-                        Another category
+                        List 2
                     </S.Link>
                 </S.LinksWrapper>
             </S.LinksBox>
