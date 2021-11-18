@@ -15,7 +15,7 @@ const defaultOptions = {
 const SplashScreen = () => {
     const navigate = useNavigate();
     const {
-        userState: { loading, authorization },
+        userState: { authorization },
         handleSignInUser,
     } = useUser();
 
@@ -31,11 +31,9 @@ const SplashScreen = () => {
 
     return (
         <S.Container>
-            {!loading && (
-                <S.LottieWrapper>
-                    <Lottie options={defaultOptions} />
-                </S.LottieWrapper>
-            )}
+            <S.LottieWrapper>
+                <Lottie options={defaultOptions} />
+            </S.LottieWrapper>
             <S.HeroImage />
             <S.Shadow />
         </S.Container>

@@ -61,6 +61,7 @@ export const Link = styled(NavLink)`
     margin: 5px 0;
     position: relative;
     display: flex;
+    text-transform: uppercase;
     text-decoration: none;
     color: ${({ theme }) => theme.colors.grayColor};
     font-size: ${({ theme }) => theme.fontSizes.XXL};

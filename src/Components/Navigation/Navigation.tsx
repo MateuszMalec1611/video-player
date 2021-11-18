@@ -26,6 +26,9 @@ const Navigation: React.FC<NavigationProps> = () => {
                         <S.Link onClick={handleMenu} to="/list2">
                             List 2
                         </S.Link>
+                        <S.Link onClick={handleMenu} to="/auth">
+                            Login
+                        </S.Link>
                     </S.LinksWrapper>
                 </S.LinksBox>
             </Toolbar>
