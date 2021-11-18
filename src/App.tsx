@@ -5,6 +5,7 @@ import { Container } from './styles';
 import Layout from './Components/Layout/Layout';
 import VideoDetail from './pages/VideoDetail/VideoDetail';
 import ProtectedRoute from './Components/ProtectedRoute/ProtectedRoute';
+import { VideosListId } from './store/Viedos/Videos.types';
 
 const App = () => {
     return (
@@ -15,7 +16,15 @@ const App = () => {
                         path="/"
                         element={
                             <ProtectedRoute>
-                                <Home />
+                                <Home listId={VideosListId.HOME} />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/list2"
+                        element={
+                            <ProtectedRoute>
+                                <Home listId={VideosListId.LIST2} />
                             </ProtectedRoute>
                         }
                     />
