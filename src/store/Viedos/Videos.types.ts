@@ -8,6 +8,8 @@ export interface VideosState {
     videoDetail: VideoDetail | undefined;
     videoPlayer: VideoPlayer | undefined;
     loading: boolean;
+    prevVideoDetailId: undefined | number;
+    prevVideoId: undefined | number;
 }
 
 export interface Video {

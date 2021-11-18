@@ -15,27 +15,27 @@ import * as S from './styles';
 const VideoDetail = () => {
     let { id } = useParams();
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
     const [videoPlayerLoading, setVideoPlayerLoading] = useState(false);
     const [showVideo, setShowVideo] = useState(false);
     const [videoPlayerError, setVideoPlayerError] = useState('');
     const {
-        videosState: { videoDetail, videoPlayer },
+        videosState: { videoDetail, videoPlayer, prevVideoDetailId, prevVideoId },
         videosDispatch,
     } = useVideos();
 
     const handleFetchVideoDetail = useCallback(async () => {
         try {
             setLoading(true);
-            if (!id) throw new Error('incorrect id given');
-
-            const videoDetailToSet = await fetchVideoDetail(+id);
+            setError('');
+            const videoDetailToSet = await fetchVideoDetail(+id!);
 
             videosDispatch({
                 type: VideosActionTypes.SET_VIDEO_DETAIL,
                 payload: videoDetailToSet,
             });
         } catch (err: any) {
-            setVideoPlayerError(err.message);
+            setError(err.message);
         } finally {
             setLoading(false);
         }
@@ -43,12 +43,12 @@ const VideoDetail = () => {
 
     const handleShowVideo = async (id: string | undefined, streamType: StreamType) => {
         handleModal();
+        if (prevVideoId === +id!) return;
         try {
             setVideoPlayerError('');
             setVideoPlayerLoading(true);
 
-            if (!id) throw new Error('incorrect id given');
-            const videoPlayerToSet = await fetchVideoPlayer(+id, streamType);
+            const videoPlayerToSet = await fetchVideoPlayer(+id!, streamType);
             if (!videoPlayerToSet?.ContentUrl)
                 throw new Error('There is no such a movie in the database');
 
@@ -66,8 +66,13 @@ const VideoDetail = () => {
     const handleModal = () => setShowVideo(!showVideo);
 
     useEffect(() => {
-        handleFetchVideoDetail();
-    }, [handleFetchVideoDetail]);
+        if (id) {
+            setError('');
+            if (prevVideoDetailId !== +id) handleFetchVideoDetail();
+        } else {
+            setError('no id, could not get detail');
+        }
+    }, [handleFetchVideoDetail, id, prevVideoDetailId]);
 
     const peopleList = videoDetail?.People.map(person => (
         <Person key={person.PersonId} person={person} />
@@ -76,7 +81,7 @@ const VideoDetail = () => {
     return (
         <div>
             {loading && <Loader margin="250px 0 0 0" />}
-            {!loading && (
+            {!loading && !error && (
                 <S.GameDetailContainer elevation={3}>
                     <S.Title>{videoDetail?.Title}</S.Title>
                     <S.Wrapper>
@@ -134,6 +139,7 @@ const VideoDetail = () => {
                     </Backdrop>
                 </S.GameDetailContainer>
             )}
+            {!loading && !!error && <S.ErrorAlert>{error}</S.ErrorAlert>}
         </div>
     );
 };
