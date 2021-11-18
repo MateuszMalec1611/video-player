@@ -34,6 +34,7 @@ const Auth: React.FC<AuthProps> = () => {
                 ] = `Bearer ${user.AuthorizationToken.Token}`;
             }
 
+            navigate('/', { replace: true });
             userDispatch({
                 type: UserActionTypes.SET_USER,
                 payload: {
@@ -44,7 +45,6 @@ const Auth: React.FC<AuthProps> = () => {
                     },
                 },
             });
-            navigate('/', { replace: true });
         } catch (err: any) {
             if (err.response?.status === 401) {
                 setError(err.response?.data.Message);
