@@ -75,7 +75,7 @@ export enum VideosActionTypes {
 }
 export enum VideosListId {
     HOME = 3,
-    LIST2 = 5,
+    LIST2 = 4,
 }
 
 export enum StreamType {

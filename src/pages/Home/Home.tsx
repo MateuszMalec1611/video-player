@@ -5,6 +5,7 @@ import { VideosActionTypes, VideosListId } from 'src/store/Viedos/Videos.types';
 import { Grid } from '@mui/material';
 import Loader from 'src/Components/Loader/Loader';
 import VideoCover from 'src/Components/VideoCover/VideoCover';
+import * as S from './styles';
 
 interface HomeProps {
     listId: VideosListId;
@@ -44,10 +45,13 @@ const Home: React.FC<HomeProps> = ({ listId }) => {
     ));
 
     return (
-        <Grid container style={{ marginTop: 20 }}>
-            {!loading && videosList}
-            {loading && <Loader margin="250px 0 0 0" />}
-        </Grid>
+        <>
+            <S.Title>{listId === VideosListId.HOME ? 'List 1' : 'List 2'}</S.Title>
+            <Grid container style={{ marginTop: 20 }}>
+                {!loading && videosList}
+                {loading && <Loader margin="250px 0 0 0" />}
+            </Grid>
+        </>
     );
 };
 

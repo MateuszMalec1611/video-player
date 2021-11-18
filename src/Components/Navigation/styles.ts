@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { AppBar } from '@mui/material';
 import { NavLink } from 'react-router-dom';
+import { device } from 'src/utils/constants';
 
 interface navigationProps {
     notActive: boolean;
@@ -19,12 +20,15 @@ export const Title = styled.h1`
     font-size: ${({ theme }) => theme.fontSizes.L};
     font-family: ${({ theme }) => theme.fontFamily.oswald};
     cursor: pointer;
+
+    @media ${device.tabletBreakpoint} {
+        font-size: ${({ theme }) => theme.fontSizes.XXL};
+    }
 `;
 
 export const LinksBox = styled.div<navigationProps>`
     position: absolute;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     top: 0;
@@ -34,10 +38,23 @@ export const LinksBox = styled.div<navigationProps>`
     background-color: ${({ theme }) => theme.colors.lightBlackColor};
     transition: transform 0.3s;
     transform: ${({ notActive }) => (notActive ? 'translateX(-200%)' : 'translateX(0)')};
+
+    @media ${device.tabletBreakpoint} {
+        position: unset;
+        transform: unset;
+        height: unset;
+        width: unset;
+        background-color: unset;
+    }
 `;
 
 export const LinksWrapper = styled.div`
     margin-bottom: 100px;
+
+    @media ${device.tabletBreakpoint} {
+        display: flex;
+        margin: unset;
+    }
 `;
 
 export const Link = styled(NavLink)`
@@ -45,10 +62,19 @@ export const Link = styled(NavLink)`
     position: relative;
     display: flex;
     text-decoration: none;
-    color: ${({ theme }) => theme.colors.whiteColor};
+    color: ${({ theme }) => theme.colors.grayColor};
     font-size: ${({ theme }) => theme.fontSizes.XXL};
+    font-family: ${({ theme }) => theme.fontFamily.oswald};
 
     &.active {
-        color: ${({ theme }) => theme.colors.greenColor};
+        color: ${({ theme }) => theme.colors.whiteColor};
+    }
+
+    @media ${device.tabletBreakpoint} {
+        margin-right: 30px;
+
+        &:last-child {
+            margin-right: unset;
+        }
     }
 `;

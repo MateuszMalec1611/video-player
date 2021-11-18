@@ -18,17 +18,17 @@ const Navigation: React.FC<NavigationProps> = () => {
             <Toolbar variant="dense">
                 <S.Title onClick={handleRedirect}>video player</S.Title>
                 <Hamburger notActive={!isActive} handleMenu={handleMenu} />
+                <S.LinksBox notActive={!isActive}>
+                    <S.LinksWrapper>
+                        <S.Link onClick={handleMenu} to="/">
+                            Home
+                        </S.Link>
+                        <S.Link onClick={handleMenu} to="/list2">
+                            List 2
+                        </S.Link>
+                    </S.LinksWrapper>
+                </S.LinksBox>
             </Toolbar>
-            <S.LinksBox notActive={!isActive}>
-                <S.LinksWrapper>
-                    <S.Link onClick={handleMenu} to="/">
-                        Home
-                    </S.Link>
-                    <S.Link onClick={handleMenu} to="/list2">
-                        List 2
-                    </S.Link>
-                </S.LinksWrapper>
-            </S.LinksBox>
         </S.NavigationBar>
     );
 };
