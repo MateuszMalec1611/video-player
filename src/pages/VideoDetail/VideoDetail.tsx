@@ -17,6 +17,7 @@ const VideoDetail = () => {
     const [loading, setLoading] = useState(false);
     const [videoPlayerLoading, setVideoPlayerLoading] = useState(false);
     const [showVideo, setShowVideo] = useState(false);
+    const [videoPlayerError, setVideoPlayerError] = useState('');
     const {
         videosState: { videoDetail, videoPlayer },
         videosDispatch,
@@ -34,7 +35,7 @@ const VideoDetail = () => {
                 payload: videoDetailToSet,
             });
         } catch (err: any) {
-            console.log(err);
+            setVideoPlayerError(err.message);
         } finally {
             setLoading(false);
         }
@@ -43,17 +44,20 @@ const VideoDetail = () => {
     const handleShowVideo = async (id: string | undefined, streamType: StreamType) => {
         handleModal();
         try {
+            setVideoPlayerError('');
             setVideoPlayerLoading(true);
 
             if (!id) throw new Error('incorrect id given');
             const videoPlayerToSet = await fetchVideoPlayer(+id, streamType);
+            if (!videoPlayerToSet?.ContentUrl)
+                throw new Error('There is no such a movie in the database');
 
             videosDispatch({
                 type: VideosActionTypes.SET_VIDEO_PLAYER,
                 payload: videoPlayerToSet,
             });
         } catch (err: any) {
-            console.log(err);
+            setVideoPlayerError(err.message);
         } finally {
             setVideoPlayerLoading(false);
         }
@@ -68,8 +72,6 @@ const VideoDetail = () => {
     const peopleList = videoDetail?.People.map(person => (
         <Person key={person.PersonId} person={person} />
     ));
-
-    console.log(videoPlayer?.ContentUrl);
 
     return (
         <div>
@@ -113,9 +115,10 @@ const VideoDetail = () => {
                     </S.Wrapper>
                     <S.Wrapper>{peopleList}</S.Wrapper>
                     <Backdrop open={showVideo} click={handleModal}>
-                        {!videoPlayerLoading && showVideo && (
+                        {!videoPlayerLoading && showVideo && !videoPlayerError && (
                             <S.TrailerBox>
                                 <ReactPlayer
+                                    onError={() => setVideoPlayerError('Failed to load video')}
                                     width="100%"
                                     height="100%"
                                     controls
@@ -125,6 +128,9 @@ const VideoDetail = () => {
                             </S.TrailerBox>
                         )}
                         {videoPlayerLoading && <Loader />}
+                        {!videoPlayerLoading && !!videoPlayerError && (
+                            <S.ErrorAlert>{videoPlayerError}</S.ErrorAlert>
+                        )}
                     </Backdrop>
                 </S.GameDetailContainer>
             )}

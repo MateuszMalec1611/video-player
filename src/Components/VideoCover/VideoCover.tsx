@@ -12,7 +12,7 @@ const VideoCover: React.FC<VideoCoverProps> = ({ video }) => {
     const navigate = useNavigate();
     const { Title } = video;
 
-    const handleRedirect = () => navigate(`/video-detail/${video.Id}`, { replace: true });
+    const handleRedirect = () => navigate(`/video-detail/${video.Id}`, { replace: false });
 
     return (
         <S.GameCard onClick={handleRedirect}>
