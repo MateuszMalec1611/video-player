@@ -8,19 +8,29 @@ export const UserContext = createContext({} as ProviderValue);
 const initialState: UserState = {
     authorization: undefined,
     user: undefined,
+    userGuest: undefined,
     loading: false,
 };
 
 const reducer = (state: UserState, action: UserActions) => {
     switch (action.type) {
         case UserActionTypes.SET_USER:
+            let isGuest: boolean;
+
+            if (action.payload.user?.UserName === 'Anonymous') {
+                isGuest = true;
+            } else {
+                isGuest = false;
+            }
             return {
                 ...state,
-                authorization: {
-                    isAuthorized: action.payload.authorization!.isAuthorized,
-                    TokenExpires: action.payload.authorization!.TokenExpires,
-                },
+                authorization:
+                    {
+                        isAuthorized: action.payload.authorization?.isAuthorized,
+                        TokenExpires: action.payload.authorization?.TokenExpires,
+                    } ?? undefined,
                 user: action.payload.user,
+                userGuest: isGuest,
             };
         case UserActionTypes.SET_LOADING:
             return {

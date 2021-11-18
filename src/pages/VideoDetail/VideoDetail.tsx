@@ -1,4 +1,5 @@
 import { Button, Alert } from '@mui/material';
+import { useNavigate } from 'react-router';
 import { useCallback, useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useParams } from 'react-router-dom';
@@ -6,6 +7,7 @@ import Backdrop from 'src/Components/Backdrop/Backdrop';
 import Loader from 'src/Components/Loader/Loader';
 import MoreInfo from 'src/Components/MoreInfo/MoreInfo';
 import Person from 'src/Components/Person/Person';
+import { useUser } from 'src/hooks/useUser';
 import { useVideos } from 'src/hooks/useVideos';
 import { fetchVideoDetail, fetchVideoPlayer } from 'src/store/Viedos/Videos.services';
 import { StreamType, VideosActionTypes } from 'src/store/Viedos/Videos.types';
@@ -14,6 +16,7 @@ import * as S from './styles';
 
 const VideoDetail = () => {
     let { id } = useParams();
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [videoPlayerLoading, setVideoPlayerLoading] = useState(false);
@@ -23,6 +26,9 @@ const VideoDetail = () => {
         videosState: { videoDetail, videoPlayer, prevVideoDetailId, prevVideoId },
         videosDispatch,
     } = useVideos();
+    const {
+        userState: { userGuest },
+    } = useUser();
 
     const handleFetchVideoDetail = useCallback(async () => {
         try {
@@ -44,6 +50,7 @@ const VideoDetail = () => {
     const handleShowVideo = async (id: string | undefined, streamType: StreamType) => {
         handleModal();
         if (prevVideoId === +id!) return;
+        if (streamType === StreamType.MAIN && userGuest) navigate('/auth', { replace: false });
         try {
             setVideoPlayerError('');
             setVideoPlayerLoading(true);
@@ -57,7 +64,11 @@ const VideoDetail = () => {
                 payload: videoPlayerToSet,
             });
         } catch (err: any) {
-            setVideoPlayerError(err.message);
+            if (err.response?.status === 403) {
+                setVideoPlayerError(err.response?.data.Message);
+            } else {
+                setVideoPlayerError(err.message);
+            }
         } finally {
             setVideoPlayerLoading(false);
         }
@@ -98,6 +109,16 @@ const VideoDetail = () => {
                                 variant="contained"
                                 color="primary">
                                 show trailer
+                            </Button>
+                            <Button
+                                onClick={() =>
+                                    userGuest
+                                        ? navigate('/auth', { replace: false })
+                                        : handleShowVideo(id, StreamType.MAIN)
+                                }
+                                variant="contained"
+                                color="primary">
+                                {userGuest ? 'Sign in to watch' : 'watch video'}
                             </Button>
                         </S.ButtonsBox>
                     </S.Wrapper>

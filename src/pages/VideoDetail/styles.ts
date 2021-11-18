@@ -39,8 +39,16 @@ export const ButtonsBox = styled.div`
     display: flex;
     flex-direction: column;
 
+    & button:first-child {
+        margin-bottom: 10px;
+    }
+
     @media ${device.tabletBreakpoint} {
         flex-direction: row;
+
+        & button:first-child {
+            margin: 0 10px 0 0;
+        }
     }
 `;
 export const TrailerBox = styled.div`
@@ -64,6 +72,7 @@ export const AlertBox = styled.h4`
     top: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
+    max-width: 600px;
     z-index: 100;
 `;
 export const ErrorWrapper = styled.div`

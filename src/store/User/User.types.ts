@@ -7,6 +7,7 @@ export type ProviderValue = {
 export interface UserState {
     authorization: Authorization;
     user: User;
+    userGuest: boolean | undefined;
     loading: boolean;
 }
 
@@ -20,8 +21,8 @@ export type User =
 
 export type Authorization =
     | {
-          isAuthorized: boolean;
-          TokenExpires: string;
+          isAuthorized: boolean | undefined;
+          TokenExpires: string | undefined;
       }
     | undefined;
 

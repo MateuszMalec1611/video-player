@@ -1,4 +1,5 @@
 import { Alert, Button, Stack } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import { useState } from 'react';
@@ -12,16 +13,17 @@ import * as S from './styles';
 interface AuthProps {}
 
 const Auth: React.FC<AuthProps> = () => {
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('test@bsgroup.eu');
+    const [password, setPassword] = useState('Test12!@');
     const { userDispatch } = useUser();
 
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setError('');
-        if (username === '' && password === '') return;
+        if (username.trim() === '' && password.trim() === '') return;
         try {
             setLoading(true);
             const user = await loginUser(username, password);
@@ -42,6 +44,7 @@ const Auth: React.FC<AuthProps> = () => {
                     },
                 },
             });
+            navigate('/', { replace: true });
         } catch (err: any) {
             if (err.response?.status === 401) {
                 setError(err.response?.data.Message);
