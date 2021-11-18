@@ -2,7 +2,7 @@ import { Alert, Button, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Loader from 'src/Components/Loader/Loader';
 import Title from 'src/Components/Title/Title';
 import { useUser } from 'src/hooks/useUser';
@@ -15,6 +15,7 @@ interface AuthProps {}
 const Auth: React.FC<AuthProps> = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [onSuccess, setOnSuccess] = useState(false);
     const [error, setError] = useState('');
     const [username, setUsername] = useState('test@bsgroup.eu');
     const [password, setPassword] = useState('Test12!@');
@@ -34,7 +35,6 @@ const Auth: React.FC<AuthProps> = () => {
                 ] = `Bearer ${user.AuthorizationToken.Token}`;
             }
 
-            navigate('/', { replace: true });
             userDispatch({
                 type: UserActionTypes.SET_USER,
                 payload: {
@@ -45,6 +45,7 @@ const Auth: React.FC<AuthProps> = () => {
                     },
                 },
             });
+            setOnSuccess(true);
         } catch (err: any) {
             if (err.response?.status === 401) {
                 setError(err.response?.data.Message);
@@ -55,6 +56,10 @@ const Auth: React.FC<AuthProps> = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (onSuccess) navigate('/', { replace: true });
+    }, [navigate, onSuccess]);
 
     const handleUsernameValue = ({ target }: React.ChangeEvent<HTMLInputElement>) =>
         setUsername(target.value);
@@ -72,6 +77,7 @@ const Auth: React.FC<AuthProps> = () => {
                         value={username}
                         variant="filled"
                         size="small"
+                        autoComplete="true"
                     />
                     <TextField
                         label="Password"
@@ -80,6 +86,7 @@ const Auth: React.FC<AuthProps> = () => {
                         variant="filled"
                         size="small"
                         type="password"
+                        autoComplete="true"
                     />
                     {loading ? (
                         <Loader />
