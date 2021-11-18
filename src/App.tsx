@@ -36,7 +36,7 @@ const App = () => {
                             </ProtectedRoute>
                         }
                     />
-                    <Route path="/signIn" element={<SplashScreen />} />
+                    <Route path="/splashScreen" element={<SplashScreen />} />
                 </Routes>
             </Container>
         </Layout>

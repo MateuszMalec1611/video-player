@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, Alert } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useParams } from 'react-router-dom';
@@ -134,12 +134,18 @@ const VideoDetail = () => {
                         )}
                         {videoPlayerLoading && <Loader />}
                         {!videoPlayerLoading && !!videoPlayerError && (
-                            <S.ErrorAlert>{videoPlayerError}</S.ErrorAlert>
+                            <S.AlertBox>
+                                <Alert severity="error">{videoPlayerError}</Alert>
+                            </S.AlertBox>
                         )}
                     </Backdrop>
                 </S.GameDetailContainer>
             )}
-            {!loading && !!error && <S.ErrorAlert>{error}</S.ErrorAlert>}
+            {!loading && !!error && (
+                <S.ErrorWrapper>
+                    <Alert severity="error">{error}</Alert>
+                </S.ErrorWrapper>
+            )}
         </div>
     );
 };

@@ -1,8 +1,8 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { fetchVideos } from 'src/store/Viedos/Videos.services';
 import { useVideos } from 'src/hooks/useVideos';
 import { VideosActionTypes, VideosListId } from 'src/store/Viedos/Videos.types';
-import { Grid } from '@mui/material';
+import { Alert, Grid } from '@mui/material';
 import Loader from 'src/Components/Loader/Loader';
 import VideoCover from 'src/Components/VideoCover/VideoCover';
 import * as S from './styles';
@@ -12,6 +12,7 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ listId }) => {
+    const [error, setError] = useState('');
     const {
         videosState: { videos, prevVideosListId, loading },
         videosDispatch,
@@ -19,6 +20,7 @@ const Home: React.FC<HomeProps> = ({ listId }) => {
 
     const handleFetchVideos = useCallback(async () => {
         try {
+            setError('');
             videosDispatch({ type: VideosActionTypes.SET_LOADING, payload: true });
 
             const videosToSet = await fetchVideos(listId);
@@ -28,7 +30,7 @@ const Home: React.FC<HomeProps> = ({ listId }) => {
                 payload: { videosToSet, videosListId: listId },
             });
         } catch (err: any) {
-            console.log(err);
+            setError(err.message);
         } finally {
             videosDispatch({ type: VideosActionTypes.SET_LOADING });
         }
@@ -48,7 +50,17 @@ const Home: React.FC<HomeProps> = ({ listId }) => {
         <>
             <S.Title>{listId === VideosListId.HOME ? 'List 1' : 'List 2'}</S.Title>
             <Grid container style={{ marginTop: 20 }}>
-                {!loading && videosList}
+                {!loading && !error && videosList}
+                {!!error && !loading && (
+                    <S.AlertBox>
+                        <Alert severity="error">{error}</Alert>
+                    </S.AlertBox>
+                )}
+                {!error && !loading && videosList.length === 0 && (
+                    <S.AlertBox>
+                        <Alert severity="info">No videos found</Alert>
+                    </S.AlertBox>
+                )}
                 {loading && <Loader margin="250px 0 0 0" />}
             </Grid>
         </>

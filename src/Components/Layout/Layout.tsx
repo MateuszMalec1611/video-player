@@ -6,7 +6,7 @@ import * as S from './styles';
 
 const Layout: React.FC = ({ children }) => {
     let location = useLocation();
-    const showNavigation = location.pathname !== '/signIn';
+    const showNavigation = location.pathname !== '/splashScreen';
 
     useEffect(() => {
         window.scrollTo(0, 0);

@@ -58,15 +58,16 @@ export const TrailerBox = styled.div`
         border-radius: 4px;
     }
 `;
-
-export const ErrorAlert = styled.h4`
+export const AlertBox = styled.h4`
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    color: ${({ theme }) => theme.colors.redColor};
-    font-size: ${({ theme }) => theme.fontSizes.XL};
-    text-align: center;
     width: 100%;
     z-index: 100;
+`;
+export const ErrorWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    width: 100%;
 `;

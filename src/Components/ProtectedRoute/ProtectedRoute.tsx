@@ -9,7 +9,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     const auth = authorization?.isAuthorized;
 
     if (!auth) {
-        return <Navigate to="/signIn" />;
+        return <Navigate to="/splashScreen" />;
     }
 
     return children;
