@@ -21,7 +21,7 @@ const Navigation: React.FC<NavigationProps> = () => {
                 <S.LinksBox notActive={!isActive}>
                     <S.LinksWrapper>
                         <S.Link onClick={handleMenu} to="/">
-                            Home
+                            List 1
                         </S.Link>
                         <S.Link onClick={handleMenu} to="/list2">
                             List 2
