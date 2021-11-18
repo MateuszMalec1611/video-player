@@ -10,7 +10,6 @@ export const coverScreen = css`
     width: 100%;
     height: 100%;
 `;
-
 export const Container = styled.div`
     display: flex;
     flex-direction: column;
@@ -20,21 +19,6 @@ export const Container = styled.div`
     height: 100%;
     width: 100%;
 `;
-
-export const Title = styled.h1`
-    margin-bottom: 20px;
-    text-align: center;
-    text-transform: uppercase;
-    font-size: 32px;
-    color: white;
-`;
-
-export const Info = styled.p`
-    font-size: 20px;
-    color: green;
-    text-align: center;
-`;
-
 export const HeroImage = styled.div`
     ${coverScreen}
     background-image: url(${imgMob});
@@ -46,9 +30,13 @@ export const HeroImage = styled.div`
         background-image: url(${imgDesc});
     }
 `;
-
 export const Shadow = styled.div`
     ${coverScreen}
     background-color: rgba(0,0,0,.7);
     z-index: -1;
+`;
+export const LottieWrapper = styled.div`
+    position: relative;
+    width: 100%;
+    height: 100%;
 `;
