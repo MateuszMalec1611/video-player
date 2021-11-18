@@ -4,7 +4,7 @@ import SplashScreen from './pages/SplashScreen/SplashScreen';
 import { Container } from './styles';
 import Layout from './Components/Layout/Layout';
 import VideoDetail from './pages/VideoDetail/VideoDetail';
-import RequireAuth from './Components/RequireAuth/RequirePath';
+import ProtectedRoute from './Components/ProtectedRoute/ProtectedRoute';
 
 const App = () => {
     return (
@@ -14,17 +14,17 @@ const App = () => {
                     <Route
                         path="/"
                         element={
-                            <RequireAuth>
+                            <ProtectedRoute>
                                 <Home />
-                            </RequireAuth>
+                            </ProtectedRoute>
                         }
                     />
                     <Route
                         path="/video-detail/:id"
                         element={
-                            <RequireAuth>
+                            <ProtectedRoute>
                                 <VideoDetail />
-                            </RequireAuth>
+                            </ProtectedRoute>
                         }
                     />
                     <Route path="/signIn" element={<SplashScreen />} />

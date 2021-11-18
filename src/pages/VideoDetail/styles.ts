@@ -43,3 +43,18 @@ export const ButtonsBox = styled.div`
         flex-direction: row;
     }
 `;
+export const TrailerBox = styled.div`
+    padding: 50px;
+    width: 100%;
+    z-index: 100;
+
+    @media ${device.tabletBreakpoint} {
+        padding: 80px;
+        max-width: 1200px;
+    }
+
+    & div {
+        box-shadow: 3px 3px 12px ${({ theme }) => theme.colors.blackColor};
+        border-radius: 4px;
+    }
+`;

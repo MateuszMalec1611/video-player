@@ -1,28 +1,30 @@
 import { Button } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
+import ReactPlayer from 'react-player';
 import { useParams } from 'react-router-dom';
+import Backdrop from 'src/Components/Backdrop/Backdrop';
 import Loader from 'src/Components/Loader/Loader';
 import MoreInfo from 'src/Components/MoreInfo/MoreInfo';
 import Person from 'src/Components/Person/Person';
 import { useVideos } from 'src/hooks/useVideos';
 import { fetchVideoDetail } from 'src/store/Viedos/Videos.services';
 import { VideosActionTypes } from 'src/store/Viedos/Videos.types';
+import { setCoverImg } from 'src/utils/helpers';
 import * as S from './styles';
 
 const VideoDetail = () => {
     let { id } = useParams();
     const [loading, setLoading] = useState(false);
+    const [showVideo, setShowVideo] = useState(false);
     const {
         videosState: { videoDetail },
         videosDispatch,
     } = useVideos();
 
-    const imageUrl = videoDetail?.Images.find(img => img.ImageTypeCode === 'FRAME');
-
     const handleFetchVideoDetail = useCallback(async () => {
         try {
             setLoading(true);
-
+            console.log(id);
             if (!id) throw new Error('incorrect id given');
 
             const videosDetailToSet = await fetchVideoDetail(+id);
@@ -38,6 +40,10 @@ const VideoDetail = () => {
         }
     }, [id, videosDispatch]);
 
+    const handleShowVideo = () => {
+        setShowVideo(!showVideo);
+    };
+
     useEffect(() => {
         handleFetchVideoDetail();
     }, [handleFetchVideoDetail]);
@@ -48,16 +54,20 @@ const VideoDetail = () => {
 
     return (
         <div>
-            {loading && <Loader margin="200px 0 0 0" />}
+            {loading && <Loader margin="250px 0 0 0" />}
             {!loading && (
                 <S.GameDetailContainer elevation={3}>
                     <S.Title>{videoDetail?.Title}</S.Title>
                     <S.Wrapper>
-                        <S.Image component="img" image={imageUrl?.Url} alt={videoDetail?.Title} />
+                        <S.Image
+                            component="img"
+                            image={setCoverImg(videoDetail)}
+                            alt={videoDetail?.Title}
+                        />
                     </S.Wrapper>
                     <S.Wrapper>
                         <S.ButtonsBox>
-                            <Button variant="contained" color="primary">
+                            <Button onClick={handleShowVideo} variant="contained" color="primary">
                                 show trailer
                             </Button>
                         </S.ButtonsBox>
@@ -80,6 +90,17 @@ const VideoDetail = () => {
                         </S.PegiBox>
                     </S.Wrapper>
                     <S.Wrapper>{peopleList}</S.Wrapper>
+                    <Backdrop open={showVideo} click={handleShowVideo}>
+                        <S.TrailerBox>
+                            <ReactPlayer
+                                width="100%"
+                                height="100%"
+                                controls
+                                playing
+                                url=""
+                            />
+                        </S.TrailerBox>
+                    </Backdrop>
                 </S.GameDetailContainer>
             )}
         </div>

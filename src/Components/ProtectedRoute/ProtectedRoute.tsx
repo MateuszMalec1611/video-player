@@ -1,7 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import { useUser } from 'src/hooks/useUser';
 
-const RequireAuth = ({ children }: { children: JSX.Element }) => {
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     const {
         userState: { authorization },
     } = useUser();
@@ -15,4 +15,4 @@ const RequireAuth = ({ children }: { children: JSX.Element }) => {
     return children;
 };
 
-export default RequireAuth;
+export default ProtectedRoute;
