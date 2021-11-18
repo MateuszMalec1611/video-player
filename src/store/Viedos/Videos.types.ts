@@ -6,6 +6,7 @@ export type ProviderValue = {
 export interface VideosState {
     videos: Video[];
     videoDetail: VideoDetail | undefined;
+    videoPlayer: VideoPlayer | undefined;
     loading: boolean;
 }
 
@@ -30,6 +31,17 @@ export interface VideoDetail extends Video {
     }[];
 }
 
+export interface VideoPlayer {
+    MediaId: number;
+    Title: string;
+    Description: string;
+    MediaTypeCode: string;
+    MediaTypeDisplayName: string;
+    StreamId: number;
+    Provider: string;
+    ContentUrl: string;
+}
+
 export type SetVideos = {
     type: VideosActionTypes.SET_VIDEOS;
     payload: Video[];
@@ -40,15 +52,26 @@ export type SetVideoDetail = {
     payload: VideoDetail;
 };
 
+export type SetVideoPlayer = {
+    type: VideosActionTypes.SET_VIDEO_PLAYER;
+    payload: VideoPlayer;
+};
+
 export type SetLoading = {
     type: VideosActionTypes.SET_LOADING;
     payload?: boolean;
 };
 
-export type VideosActions = SetVideos | SetVideoDetail | SetLoading;
+export type VideosActions = SetVideos | SetVideoDetail | SetVideoPlayer | SetLoading;
 
 export enum VideosActionTypes {
     SET_VIDEOS = 'SET_VIDEOS',
     SET_VIDEO_DETAIL = 'SET_VIDEO_DETAIL',
+    SET_VIDEO_PLAYER = 'SET_VIDEO_PLAYER',
     SET_LOADING = 'SET_LOADING',
+}
+
+export enum StreamType {
+    TRIAL = 'TRIAL',
+    MAIN = 'MAIN',
 }

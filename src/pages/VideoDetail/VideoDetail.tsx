@@ -7,31 +7,31 @@ import Loader from 'src/Components/Loader/Loader';
 import MoreInfo from 'src/Components/MoreInfo/MoreInfo';
 import Person from 'src/Components/Person/Person';
 import { useVideos } from 'src/hooks/useVideos';
-import { fetchVideoDetail } from 'src/store/Viedos/Videos.services';
-import { VideosActionTypes } from 'src/store/Viedos/Videos.types';
+import { fetchVideoDetail, fetchVideoPlayer } from 'src/store/Viedos/Videos.services';
+import { StreamType, VideosActionTypes } from 'src/store/Viedos/Videos.types';
 import { setCoverImg } from 'src/utils/helpers';
 import * as S from './styles';
 
 const VideoDetail = () => {
     let { id } = useParams();
     const [loading, setLoading] = useState(false);
+    const [videoPlayerLoading, setVideoPlayerLoading] = useState(false);
     const [showVideo, setShowVideo] = useState(false);
     const {
-        videosState: { videoDetail },
+        videosState: { videoDetail, videoPlayer },
         videosDispatch,
     } = useVideos();
 
     const handleFetchVideoDetail = useCallback(async () => {
         try {
             setLoading(true);
-            console.log(id);
             if (!id) throw new Error('incorrect id given');
 
-            const videosDetailToSet = await fetchVideoDetail(+id);
+            const videoDetailToSet = await fetchVideoDetail(+id);
 
             videosDispatch({
                 type: VideosActionTypes.SET_VIDEO_DETAIL,
-                payload: videosDetailToSet,
+                payload: videoDetailToSet,
             });
         } catch (err: any) {
             console.log(err);
@@ -40,9 +40,26 @@ const VideoDetail = () => {
         }
     }, [id, videosDispatch]);
 
-    const handleShowVideo = () => {
-        setShowVideo(!showVideo);
+    const handleShowVideo = async (id: string | undefined, streamType: StreamType) => {
+        handleModal();
+        try {
+            setVideoPlayerLoading(true);
+
+            if (!id) throw new Error('incorrect id given');
+            const videoPlayerToSet = await fetchVideoPlayer(+id, streamType);
+
+            videosDispatch({
+                type: VideosActionTypes.SET_VIDEO_PLAYER,
+                payload: videoPlayerToSet,
+            });
+        } catch (err: any) {
+            console.log(err);
+        } finally {
+            setVideoPlayerLoading(false);
+        }
     };
+
+    const handleModal = () => setShowVideo(!showVideo);
 
     useEffect(() => {
         handleFetchVideoDetail();
@@ -51,6 +68,8 @@ const VideoDetail = () => {
     const peopleList = videoDetail?.People.map(person => (
         <Person key={person.PersonId} person={person} />
     ));
+
+    console.log(videoPlayer?.ContentUrl);
 
     return (
         <div>
@@ -67,7 +86,10 @@ const VideoDetail = () => {
                     </S.Wrapper>
                     <S.Wrapper>
                         <S.ButtonsBox>
-                            <Button onClick={handleShowVideo} variant="contained" color="primary">
+                            <Button
+                                onClick={() => handleShowVideo(id, StreamType.TRIAL)}
+                                variant="contained"
+                                color="primary">
                                 show trailer
                             </Button>
                         </S.ButtonsBox>
@@ -90,16 +112,19 @@ const VideoDetail = () => {
                         </S.PegiBox>
                     </S.Wrapper>
                     <S.Wrapper>{peopleList}</S.Wrapper>
-                    <Backdrop open={showVideo} click={handleShowVideo}>
-                        <S.TrailerBox>
-                            <ReactPlayer
-                                width="100%"
-                                height="100%"
-                                controls
-                                playing
-                                url=""
-                            />
-                        </S.TrailerBox>
+                    <Backdrop open={showVideo} click={handleModal}>
+                        {!videoPlayerLoading && showVideo && (
+                            <S.TrailerBox>
+                                <ReactPlayer
+                                    width="100%"
+                                    height="100%"
+                                    controls
+                                    playing
+                                    url={videoPlayer?.ContentUrl}
+                                />
+                            </S.TrailerBox>
+                        )}
+                        {videoPlayerLoading && <Loader />}
                     </Backdrop>
                 </S.GameDetailContainer>
             )}
