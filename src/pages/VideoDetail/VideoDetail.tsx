@@ -130,7 +130,7 @@ const VideoDetail = () => {
                                 }
                                 variant="contained"
                                 color="primary">
-                                {userIsAnonymous ? 'Sign in to watch' : 'watch video'}
+                                {userIsAnonymous ? 'Sign in to watch' : 'watch'}
                             </Button>
                         </S.ButtonsBox>
                     </S.Wrapper>
