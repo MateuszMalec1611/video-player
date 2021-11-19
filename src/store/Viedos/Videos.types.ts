@@ -5,10 +5,8 @@ export type ProviderValue = {
 
 export interface VideosState {
     videos?: {
-        [key: string]: Video[];
-    };
-    videoListTotalItems?: {
-        [key: string]: number;
+        videosList: { [key: string]: Video[] };
+        videoListTotalItems: { [key: string]: number };
     };
     videoDetail?: {
         [key: string]: VideoDetail;

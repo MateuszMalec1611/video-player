@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { fetchVideos } from 'src/store/Viedos/Videos.services';
 import { useVideos } from 'src/hooks/useVideos';
+import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { VideosActionTypes, VideosListId } from 'src/store/Viedos/Videos.types';
 import { Alert, Grid } from '@mui/material';
 import Loader from 'src/Components/Loader/Loader';
@@ -17,12 +18,12 @@ const Home: React.FC<HomeProps> = ({ listId }) => {
     const [error, setError] = useState('');
     const [loadMore, setLoadMore] = useState(true);
     const {
-        videosState: { videos, loading, videoListTotalItems },
+        videosState: { videos, loading },
         videosDispatch,
     } = useVideos();
 
-    const videoList = videos?.[listId];
-    const totalItems = videoListTotalItems?.[listId];
+    const videoList = videos?.videosList?.[listId];
+    const totalItems = videos?.videoListTotalItems?.[listId];
 
     const handleFetchVideos = useCallback(
         async (page = 1) => {
@@ -46,10 +47,10 @@ const Home: React.FC<HomeProps> = ({ listId }) => {
     );
 
     const fetchMoreData = () => {
-        let page = 2;
+        if (!videoList) return;
+        let page = Math.ceil(videoList!.length / ITEMS_PER_PAGE) + 1;
 
         handleFetchVideos(page);
-        page++;
     };
 
     useEffect(() => {

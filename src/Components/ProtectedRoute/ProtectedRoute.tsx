@@ -6,12 +6,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
         userState: { authorization },
     } = useUser();
 
-    // console.log(new Date(authorization?.TokenExpires!).getTime());
-
-    const tokenExipred =
-        new Date().getTime() > Number(new Date(authorization?.TokenExpires!).getTime());
-
-    if (!authorization?.isAuthorized || tokenExipred) {
+    if (!authorization?.isAuthorized ) {
         return <Navigate to="/splash-screen" state={{ tokenExipred: true }} />;
     }
 

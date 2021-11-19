@@ -12,24 +12,18 @@ const defaultOptions = {
     rendererSettings: {},
 };
 
-const SplashScreen = (props: any) => {
+const SplashScreen = () => {
     const navigate = useNavigate();
     const {
         userState: { authorization },
         handleAnonymousUser,
     } = useUser();
 
-    const tokenExipred = props.location?.state.tokenExpired;
-    console.log(props);
-
     useEffect(() => {
-        if (tokenExipred) {
-            handleAnonymousUser();
-            return;
-        }
         if (!authorization?.isAuthorized) handleAnonymousUser();
+
         if (authorization?.isAuthorized) navigate('/', { replace: true });
-    }, [authorization?.isAuthorized, handleAnonymousUser, navigate, tokenExipred]);
+    }, [authorization?.isAuthorized, handleAnonymousUser, navigate]);
 
     return (
         <S.Container>

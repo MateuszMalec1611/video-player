@@ -21,3 +21,5 @@ export const userDevice = {
     PlatformCode: 'WEB',
     Name: '7a6a86e5-356f-4795-8998-305e1b205531',
 };
+
+export const ITEMS_PER_PAGE = 15;

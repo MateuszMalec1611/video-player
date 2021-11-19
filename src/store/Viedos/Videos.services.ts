@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 import api from 'src/api';
+import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { StreamType, Video, VideoDetail, VideoPlayer, VideosListId } from './Videos.types';
 
 export const fetchVideos = async (id: VideosListId, page = 1) => {
@@ -11,7 +12,7 @@ export const fetchVideos = async (id: VideosListId, page = 1) => {
             IncludeImages: true,
             IncludeMedia: false,
             PageNumber: page,
-            PageSize: 15,
+            PageSize: ITEMS_PER_PAGE,
         }
     );
     return { videoList: response.data.Entities, totalCount: response.data.TotalCount };
