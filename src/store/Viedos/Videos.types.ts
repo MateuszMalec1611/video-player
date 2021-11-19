@@ -4,13 +4,16 @@ export type ProviderValue = {
 };
 
 export interface VideosState {
-    videos: Video[];
-    videoDetail: VideoDetail | undefined;
-    videoPlayer: VideoPlayer | undefined;
+    videos?: {
+        [key: string]: Video[];
+    };
+    videoDetail?: {
+        [key: string]: VideoDetail;
+    };
+    videoPlayer?: {
+        [key: string]: { video: VideoPlayer; streamType: StreamType };
+    };
     loading: boolean;
-    prevVideosListId: undefined | VideosListId;
-    prevVideoDetailId: undefined | number;
-    prevVideoPlayer: { id: number; streamType: StreamType } | undefined;
 }
 
 export interface Video {

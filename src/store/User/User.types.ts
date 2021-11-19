@@ -1,16 +1,15 @@
 export type ProviderValue = {
     userState: UserState;
     userDispatch: (action: UserActions) => void;
-    handleSignInUser: () => Promise<void>;
+    handleAnonymousUser: () => Promise<void>;
+    userIsAnonymous: boolean;
 };
 
 export interface UserState {
     authorization: Authorization;
     user: User;
-    userGuest: boolean | undefined;
     loading: boolean;
 }
-
 export type User =
     | {
           FullName: string;

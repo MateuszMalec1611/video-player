@@ -11,3 +11,13 @@ export const device = {
     desktopBreakpoint: `(min-width: ${size.desktopBreakpoint})`,
     largeDesktopBreakpoint: `(min-width: ${size.largeDesktopBreakpoint})`,
 };
+
+export const anonymousUserDevice = {
+    PlatformCode: 'WEB',
+    Name: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+};
+
+export const userDevice = {
+    PlatformCode: 'WEB',
+    Name: '7a6a86e5-356f-4795-8998-305e1b205531',
+};

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { createContext, useCallback, useReducer } from 'react';
-import { signInUser } from './User.services';
+import { signInAnonymousUser } from './User.services';
 import { ProviderValue, UserActions, UserActionTypes, UserState } from './User.types';
 
 export const UserContext = createContext({} as ProviderValue);
@@ -8,20 +8,12 @@ export const UserContext = createContext({} as ProviderValue);
 const initialState: UserState = {
     authorization: undefined,
     user: undefined,
-    userGuest: undefined,
     loading: false,
 };
 
 const reducer = (state: UserState, action: UserActions) => {
     switch (action.type) {
         case UserActionTypes.SET_USER:
-            let isGuest: boolean;
-
-            if (action.payload.user?.UserName === 'Anonymous') {
-                isGuest = true;
-            } else {
-                isGuest = false;
-            }
             return {
                 ...state,
                 authorization:
@@ -30,7 +22,6 @@ const reducer = (state: UserState, action: UserActions) => {
                         TokenExpires: action.payload.authorization?.TokenExpires,
                     } ?? undefined,
                 user: action.payload.user,
-                userGuest: isGuest,
             };
         case UserActionTypes.SET_LOADING:
             return {
@@ -45,10 +36,10 @@ const reducer = (state: UserState, action: UserActions) => {
 const UserProvider: React.FC = ({ children }) => {
     const [userState, userDispatch] = useReducer(reducer, initialState);
 
-    const handleSignInUser = useCallback(async () => {
+    const handleAnonymousUser = useCallback(async () => {
         try {
             userDispatch({ type: UserActionTypes.SET_LOADING, payload: true });
-            const user = await signInUser();
+            const user = await signInAnonymousUser();
 
             if (user.AuthorizationToken) {
                 axios.defaults.headers.common[
@@ -73,8 +64,13 @@ const UserProvider: React.FC = ({ children }) => {
         }
     }, []);
 
+    const userIsAnonymous = userState.user?.UserName === 'Anonymous';
+
+    // const handleRefreshToken = ()
+
     return (
-        <UserContext.Provider value={{ userState, userDispatch, handleSignInUser }}>
+        <UserContext.Provider
+            value={{ userState, userDispatch, handleAnonymousUser, userIsAnonymous }}>
             {children}
         </UserContext.Provider>
     );

@@ -15,9 +15,11 @@ interface HomeProps {
 const Home: React.FC<HomeProps> = ({ listId }) => {
     const [error, setError] = useState('');
     const {
-        videosState: { videos, prevVideosListId, loading },
+        videosState: { videos, loading },
         videosDispatch,
     } = useVideos();
+
+    const videoList = videos?.[listId];
 
     const handleFetchVideos = useCallback(async () => {
         try {
@@ -38,10 +40,10 @@ const Home: React.FC<HomeProps> = ({ listId }) => {
     }, [listId, videosDispatch]);
 
     useEffect(() => {
-        if (prevVideosListId !== listId) handleFetchVideos();
-    }, [handleFetchVideos, listId, prevVideosListId]);
+        if (!videoList) handleFetchVideos();
+    }, [handleFetchVideos, videoList]);
 
-    const videosList = videos.map(video => (
+    const videosListRenderer = videoList?.map(video => (
         <Grid key={video.Id} item xs={12} sm={6} lg={4} xl={2}>
             <VideoCover video={video} />
         </Grid>
@@ -50,20 +52,20 @@ const Home: React.FC<HomeProps> = ({ listId }) => {
     return (
         <>
             <Title>{listId === VideosListId.HOME ? 'List 1' : 'List 2'}</Title>
-            <Grid container style={{ marginTop: 20 }}>
-                {!loading && !error && videosList}
+            <S.CardsWrapper container>
+                {!loading && !error && videosListRenderer}
                 {!!error && !loading && (
                     <S.AlertBox>
                         <Alert severity="error">{error}</Alert>
                     </S.AlertBox>
                 )}
-                {!error && !loading && videosList.length === 0 && (
+                {!error && !loading && !videosListRenderer?.length && (
                     <S.AlertBox>
                         <Alert severity="info">No videos found</Alert>
                     </S.AlertBox>
                 )}
                 {loading && <Loader margin="250px 0 0 0" />}
-            </Grid>
+            </S.CardsWrapper>
         </>
     );
 };

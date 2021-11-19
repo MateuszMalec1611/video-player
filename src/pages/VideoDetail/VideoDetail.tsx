@@ -23,12 +23,13 @@ const VideoDetail = () => {
     const [showVideo, setShowVideo] = useState(false);
     const [videoPlayerError, setVideoPlayerError] = useState('');
     const {
-        videosState: { videoDetail, videoPlayer, prevVideoDetailId, prevVideoPlayer },
+        videosState: { videoDetail, videoPlayer },
         videosDispatch,
     } = useVideos();
-    const {
-        userState: { userGuest },
-    } = useUser();
+    const { userIsAnonymous } = useUser();
+
+    const videoDetailToDisplay = videoDetail?.[id!];
+    const videoPlayerToDisplay = videoPlayer?.[id!];
 
     const handleFetchVideoDetail = useCallback(async () => {
         try {
@@ -50,8 +51,10 @@ const VideoDetail = () => {
     const handleShowVideo = async (id: string | undefined, streamType: StreamType) => {
         handleModal();
         setVideoPlayerError('');
-        if (prevVideoPlayer?.id === +id! && prevVideoPlayer.streamType === streamType) return;
-        if (streamType === StreamType.MAIN && userGuest) navigate('/auth', { replace: false });
+        if (streamType === StreamType.MAIN && userIsAnonymous)
+            navigate('/auth', { replace: false });
+        if (videoPlayerToDisplay?.video && videoPlayerToDisplay.streamType === streamType) return;
+
         try {
             setVideoPlayerLoading(true);
 
@@ -79,13 +82,13 @@ const VideoDetail = () => {
     useEffect(() => {
         if (id) {
             setError('');
-            if (prevVideoDetailId !== +id) handleFetchVideoDetail();
+            if (!videoDetailToDisplay) handleFetchVideoDetail();
         } else {
             setError('no id, could not get detail');
         }
-    }, [handleFetchVideoDetail, id, prevVideoDetailId]);
+    }, [handleFetchVideoDetail, id, videoDetailToDisplay]);
 
-    const peopleList = videoDetail?.People.map(person => (
+    const peopleList = videoDetailToDisplay?.People.map(person => (
         <Person key={person.PersonId} person={person} />
     ));
 
@@ -98,7 +101,7 @@ const VideoDetail = () => {
                     <S.Wrapper>
                         <S.Image
                             component="img"
-                            image={setCoverImg(videoDetail)}
+                            image={setCoverImg(videoDetailToDisplay)}
                             alt={videoDetail?.Title}
                         />
                     </S.Wrapper>
@@ -108,25 +111,25 @@ const VideoDetail = () => {
                                 onClick={() => handleShowVideo(id, StreamType.TRIAL)}
                                 variant="contained"
                                 color="primary">
-                                show trailer
+                                trailer
                             </Button>
                             <Button
                                 onClick={() =>
-                                    userGuest
+                                    userIsAnonymous
                                         ? navigate('/auth', { replace: false })
                                         : handleShowVideo(id, StreamType.MAIN)
                                 }
                                 variant="contained"
                                 color="primary">
-                                {userGuest ? 'Sign in to watch' : 'watch video'}
+                                {userIsAnonymous ? 'Sign in to watch' : 'watch video'}
                             </Button>
                         </S.ButtonsBox>
                     </S.Wrapper>
-                    {videoDetail?.Description && (
+                    {videoDetailToDisplay?.Description && (
                         <MoreInfo
                             title="Description"
-                            shortDesc={videoDetail?.Description.slice(0, 28)}
-                            description={videoDetail?.Description}
+                            shortDesc={videoDetailToDisplay?.Description.slice(0, 28)}
+                            description={videoDetailToDisplay?.Description}
                             inner={true}
                         />
                     )}
@@ -149,7 +152,7 @@ const VideoDetail = () => {
                                     height="100%"
                                     controls
                                     playing
-                                    url={videoPlayer?.ContentUrl}
+                                    url={videoPlayerToDisplay?.video?.ContentUrl}
                                 />
                             </S.TrailerBox>
                         )}

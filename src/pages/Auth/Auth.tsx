@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import Loader from 'src/Components/Loader/Loader';
 import Title from 'src/Components/Title/Title';
 import { useUser } from 'src/hooks/useUser';
-import { loginUser } from 'src/store/User/User.services';
+import { signInUser } from 'src/store/User/User.services';
 import { UserActionTypes } from 'src/store/User/User.types';
 import * as S from './styles';
 
@@ -27,7 +27,7 @@ const Auth: React.FC<AuthProps> = () => {
         if (username.trim() === '' && password.trim() === '') return;
         try {
             setLoading(true);
-            const user = await loginUser(username, password);
+            const user = await signInUser(username, password);
 
             if (user.AuthorizationToken) {
                 axios.defaults.headers.common[

@@ -11,10 +11,7 @@ interface NavigationProps {}
 const Navigation: React.FC<NavigationProps> = () => {
     const navigate = useNavigate();
     const [isActive, setIsActive] = useState(false);
-    const {
-        userState: { userGuest },
-        userDispatch,
-    } = useUser();
+    const { userIsAnonymous, userDispatch } = useUser();
 
     const handleMenu = () => setIsActive(!isActive);
     const handleLogout = () => {
@@ -44,9 +41,9 @@ const Navigation: React.FC<NavigationProps> = () => {
                             List 2
                         </S.Link>
                         <S.Link
-                            onClick={userGuest ? handleMenu : handleLogout}
-                            to={userGuest ? '/auth' : '/splash-screen'}>
-                            {userGuest ? 'Login' : 'Logout'}
+                            onClick={userIsAnonymous ? handleMenu : handleLogout}
+                            to={userIsAnonymous ? '/auth' : '/splash-screen'}>
+                            {userIsAnonymous ? 'Login' : 'Logout'}
                         </S.Link>
                     </S.LinksWrapper>
                 </S.LinksBox>

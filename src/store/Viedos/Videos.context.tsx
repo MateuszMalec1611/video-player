@@ -4,13 +4,10 @@ import { VideosActions, VideosState, ProviderValue, VideosActionTypes } from './
 export const VideosContext = createContext({} as ProviderValue);
 
 const initialState: VideosState = {
-    videos: [],
+    videos: undefined,
     videoDetail: undefined,
     videoPlayer: undefined,
     loading: false,
-    prevVideosListId: undefined,
-    prevVideoDetailId: undefined,
-    prevVideoPlayer: undefined,
 };
 
 const reducer = (state: VideosState, action: VideosActions) => {
@@ -18,22 +15,28 @@ const reducer = (state: VideosState, action: VideosActions) => {
         case VideosActionTypes.SET_VIDEOS:
             return {
                 ...state,
-                videos: action.payload.videosToSet,
-                prevVideosListId: action.payload.videosListId,
+                videos: {
+                    ...state.videos,
+                    [action.payload.videosListId]: action.payload.videosToSet,
+                },
             };
         case VideosActionTypes.SET_VIDEO_DETAIL:
             return {
                 ...state,
-                videoDetail: action.payload,
-                prevVideoDetailId: action.payload.Id,
+                videoDetail: {
+                    ...state.videoDetail,
+                    [action.payload.Id]: action.payload,
+                },
             };
         case VideosActionTypes.SET_VIDEO_PLAYER:
             return {
                 ...state,
-                videoPlayer: action.payload.videoPlayer,
-                prevVideoPlayer: {
-                    id: action.payload.videoPlayer.MediaId,
-                    streamType: action.payload.streamType,
+                videoPlayer: {
+                    ...state.videoPlayer,
+                    [action.payload.videoPlayer.MediaId]: {
+                        video: action.payload.videoPlayer,
+                        streamType: action.payload.streamType,
+                    },
                 },
             };
         case VideosActionTypes.SET_LOADING:
