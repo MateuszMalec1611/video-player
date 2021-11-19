@@ -1,5 +1,5 @@
 import { CircularProgress } from '@mui/material';
-import { Box } from './styled';
+import { Box } from './styles';
 
 interface LoaderProps {
     margin?: string;

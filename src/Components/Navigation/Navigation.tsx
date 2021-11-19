@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Toolbar } from '@mui/material';
 import { useNavigate } from 'react-router';
+import { Toolbar } from '@mui/material';
 import Hamburger from '../Hamburger/Hamburger';
-import * as S from './styles';
 import { useUser } from 'src/hooks/useUser';
 import { UserActionTypes } from 'src/store/User/User.types';
+import * as S from './styles';
 
 interface NavigationProps {}
 

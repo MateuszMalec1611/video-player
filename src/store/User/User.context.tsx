@@ -37,6 +37,7 @@ const UserProvider: React.FC = ({ children }) => {
     const [userState, userDispatch] = useReducer(reducer, initialState);
 
     const handleAnonymousUser = useCallback(async () => {
+        console.log(`object`);
         try {
             userDispatch({ type: UserActionTypes.SET_LOADING, payload: true });
             const user = await signInAnonymousUser();
@@ -58,7 +59,7 @@ const UserProvider: React.FC = ({ children }) => {
                 },
             });
         } catch (err: any) {
-            console.log(err);
+            alert(err.message);
         } finally {
             userDispatch({ type: UserActionTypes.SET_LOADING });
         }

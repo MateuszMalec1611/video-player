@@ -12,6 +12,7 @@ import { useVideos } from 'src/hooks/useVideos';
 import { fetchVideoDetail, fetchVideoPlayer } from 'src/store/Viedos/Videos.services';
 import { StreamType, VideosActionTypes } from 'src/store/Viedos/Videos.types';
 import { setCoverImg } from 'src/utils/helpers';
+import List from 'src/Components/List/List';
 import * as S from './styles';
 
 const VideoDetail = () => {
@@ -88,9 +89,17 @@ const VideoDetail = () => {
         }
     }, [handleFetchVideoDetail, id, videoDetailToDisplay]);
 
-    const peopleList = videoDetailToDisplay?.People.map(person => (
-        <Person key={person.PersonId} person={person} />
-    ));
+    const directorList = videoDetailToDisplay?.People.filter(
+        person => person.PersonRoleCode === 'DIRECTOR'
+    ).map(person => <Person key={person.PersonId} personFullName={person.PersonFullName} />);
+
+    const writerList = videoDetailToDisplay?.People.filter(
+        person => person.PersonRoleCode === 'WRITER'
+    ).map(person => <Person key={person.PersonId} personFullName={person.PersonFullName} />);
+
+    const castList = videoDetailToDisplay?.People.filter(
+        person => person.PersonRoleCode === 'CAST'
+    ).map(person => <Person key={person.PersonId} personFullName={person.PersonFullName} />);
 
     return (
         <div>
@@ -102,7 +111,7 @@ const VideoDetail = () => {
                         <S.Image
                             component="img"
                             image={setCoverImg(videoDetailToDisplay)}
-                            alt={videoDetail?.Title}
+                            alt={videoDetailToDisplay?.Title}
                         />
                     </S.Wrapper>
                     <S.Wrapper>
@@ -130,19 +139,36 @@ const VideoDetail = () => {
                             title="Description"
                             shortDesc={videoDetailToDisplay?.Description.slice(0, 28)}
                             description={videoDetailToDisplay?.Description}
-                            inner={true}
                         />
                     )}
                     <S.Wrapper>
                         <S.PegiBox>
                             <S.PegiImage
                                 component="img"
-                                image={videoDetail?.MediaAgeRestrictionImageUrl}
+                                image={videoDetailToDisplay?.MediaAgeRestrictionImageUrl}
                                 alt="PEGI"
                             />
                         </S.PegiBox>
                     </S.Wrapper>
-                    <S.Wrapper>{peopleList}</S.Wrapper>
+                    <S.Wrapper>
+                        <div>
+                            {!!directorList?.length && (
+                                <List role={directorList?.length === 1 ? 'Director' : 'Directors'}>
+                                    {directorList}
+                                </List>
+                            )}
+                            {!!writerList?.length && (
+                                <List role={writerList?.length === 1 ? 'Writer' : 'Writers'}>
+                                    {writerList}
+                                </List>
+                            )}
+                            {!!castList?.length && (
+                                <List role={castList?.length === 1 ? 'Cast' : 'Casts'}>
+                                    {castList}
+                                </List>
+                            )}
+                        </div>
+                    </S.Wrapper>
                     <Backdrop open={showVideo} click={handleModal}>
                         {!videoPlayerLoading && showVideo && !videoPlayerError && (
                             <S.TrailerBox>
