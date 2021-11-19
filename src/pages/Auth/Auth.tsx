@@ -17,8 +17,8 @@ const Auth: React.FC<AuthProps> = () => {
     const [loading, setLoading] = useState(false);
     const [onSuccess, setOnSuccess] = useState(false);
     const [error, setError] = useState('');
-    const [username, setUsername] = useState('test@bsgroup.eu');
-    const [password, setPassword] = useState('Test12!@');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const { userDispatch } = useUser();
 
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {

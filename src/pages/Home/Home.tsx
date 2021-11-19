@@ -38,7 +38,11 @@ const Home: React.FC<HomeProps> = ({ listId }) => {
                     payload: { videosToSet, videosListId: listId, totalCount },
                 });
             } catch (err: any) {
-                setError(err.message);
+                if (err.response?.status === 401) {
+                    setError(err.response?.data.Message);
+                } else {
+                    setError(err.message);
+                }
             } finally {
                 videosDispatch({ type: VideosActionTypes.SET_LOADING });
             }
