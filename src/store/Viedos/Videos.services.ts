@@ -2,16 +2,19 @@ import { AxiosResponse } from 'axios';
 import api from 'src/api';
 import { StreamType, Video, VideoDetail, VideoPlayer, VideosListId } from './Videos.types';
 
-export const fetchVideos = async (id: VideosListId) => {
-    const response: AxiosResponse<{ Entities: Video[] }> = await api().post('Media/GetMediaList', {
-        MediaListId: id,
-        IncludeCategories: false,
-        IncludeImages: true,
-        IncludeMedia: false,
-        PageNumber: 1,
-        PageSize: 15,
-    });
-    return response.data.Entities ?? [];
+export const fetchVideos = async (id: VideosListId, page = 1) => {
+    const response: AxiosResponse<{ Entities: Video[]; TotalCount: number }> = await api().post(
+        'Media/GetMediaList',
+        {
+            MediaListId: id,
+            IncludeCategories: false,
+            IncludeImages: true,
+            IncludeMedia: false,
+            PageNumber: page,
+            PageSize: 15,
+        }
+    );
+    return { videoList: response.data.Entities, totalCount: response.data.TotalCount };
 };
 export const fetchVideoDetail = async (id: number) => {
     const response: AxiosResponse<VideoDetail> = await api().post('Media/GetMedia', {

@@ -6,6 +6,7 @@ import { Alert, Grid } from '@mui/material';
 import Loader from 'src/Components/Loader/Loader';
 import VideoCover from 'src/Components/VideoCover/VideoCover';
 import Title from 'src/Components/Title/Title';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import * as S from './styles';
 
 interface HomeProps {
@@ -14,30 +15,52 @@ interface HomeProps {
 
 const Home: React.FC<HomeProps> = ({ listId }) => {
     const [error, setError] = useState('');
+    const [loadMore, setLoadMore] = useState(true);
     const {
-        videosState: { videos, loading },
+        videosState: { videos, loading, videoListTotalItems },
         videosDispatch,
     } = useVideos();
 
     const videoList = videos?.[listId];
+    const totalItems = videoListTotalItems?.[listId];
 
-    const handleFetchVideos = useCallback(async () => {
-        try {
-            setError('');
-            videosDispatch({ type: VideosActionTypes.SET_LOADING, payload: true });
+    const handleFetchVideos = useCallback(
+        async (page = 1) => {
+            try {
+                setError('');
+                videosDispatch({ type: VideosActionTypes.SET_LOADING, payload: true });
 
-            const videosToSet = await fetchVideos(listId);
+                const { videoList: videosToSet, totalCount } = await fetchVideos(listId, page);
 
-            videosDispatch({
-                type: VideosActionTypes.SET_VIDEOS,
-                payload: { videosToSet, videosListId: listId },
-            });
-        } catch (err: any) {
-            setError(err.message);
-        } finally {
-            videosDispatch({ type: VideosActionTypes.SET_LOADING });
+                videosDispatch({
+                    type: VideosActionTypes.SET_VIDEOS,
+                    payload: { videosToSet, videosListId: listId, totalCount },
+                });
+            } catch (err: any) {
+                setError(err.message);
+            } finally {
+                videosDispatch({ type: VideosActionTypes.SET_LOADING });
+            }
+        },
+        [listId, videosDispatch]
+    );
+
+    const fetchMoreData = () => {
+        let page = 2;
+
+        handleFetchVideos(page);
+        page++;
+    };
+
+    useEffect(() => {
+        setLoadMore(true);
+        if (!videoList || !totalItems) return;
+
+        if (videoList!.length >= totalItems) {
+            setLoadMore(false);
+            return;
         }
-    }, [listId, videosDispatch]);
+    }, [totalItems, videoList]);
 
     useEffect(() => {
         if (!videoList) handleFetchVideos();
@@ -52,20 +75,26 @@ const Home: React.FC<HomeProps> = ({ listId }) => {
     return (
         <>
             <Title>{listId === VideosListId.HOME ? 'List 1' : 'List 2'}</Title>
-            <S.CardsWrapper container>
-                {!loading && !error && videosListRenderer}
-                {!!error && !loading && (
-                    <S.AlertBox>
-                        <Alert severity="error">{error}</Alert>
-                    </S.AlertBox>
-                )}
-                {!error && !loading && !videosListRenderer?.length && (
-                    <S.AlertBox>
-                        <Alert severity="info">No videos found</Alert>
-                    </S.AlertBox>
-                )}
-                {loading && <Loader margin="250px 0 0 0" />}
-            </S.CardsWrapper>
+            <InfiniteScroll
+                dataLength={videoList?.length ?? 0}
+                next={fetchMoreData}
+                hasMore={loadMore}
+                loader={loading && <Loader margin="50px 0 " />}>
+                <S.CardsWrapper container>
+                    {!error && videosListRenderer}
+
+                    {!!error && !loading && (
+                        <S.AlertBox>
+                            <Alert severity="error">{error}</Alert>
+                        </S.AlertBox>
+                    )}
+                    {!error && !loading && !videosListRenderer?.length && (
+                        <S.AlertBox>
+                            <Alert severity="info">No videos found</Alert>
+                        </S.AlertBox>
+                    )}
+                </S.CardsWrapper>
+            </InfiniteScroll>
         </>
     );
 };

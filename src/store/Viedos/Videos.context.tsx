@@ -5,6 +5,7 @@ export const VideosContext = createContext({} as ProviderValue);
 
 const initialState: VideosState = {
     videos: undefined,
+    videoListTotalItems: undefined,
     videoDetail: undefined,
     videoPlayer: undefined,
     loading: false,
@@ -13,11 +14,27 @@ const initialState: VideosState = {
 const reducer = (state: VideosState, action: VideosActions) => {
     switch (action.type) {
         case VideosActionTypes.SET_VIDEOS:
+            if (state.videos?.[action.payload.videosListId]) {
+                return {
+                    ...state,
+                    videos: {
+                        ...state.videos,
+                        [action.payload.videosListId]: [
+                            ...state.videos?.[action.payload.videosListId],
+                            ...action.payload.videosToSet,
+                        ],
+                    },
+                };
+            }
             return {
                 ...state,
                 videos: {
                     ...state.videos,
                     [action.payload.videosListId]: action.payload.videosToSet,
+                },
+                videoListTotalItems: {
+                    ...state.videoListTotalItems,
+                    [action.payload.videosListId]: action.payload.totalCount,
                 },
             };
         case VideosActionTypes.SET_VIDEO_DETAIL:

@@ -7,6 +7,9 @@ export interface VideosState {
     videos?: {
         [key: string]: Video[];
     };
+    videoListTotalItems?: {
+        [key: string]: number;
+    };
     videoDetail?: {
         [key: string]: VideoDetail;
     };
@@ -50,7 +53,7 @@ export interface VideoPlayer {
 
 export type SetVideos = {
     type: VideosActionTypes.SET_VIDEOS;
-    payload: { videosToSet: Video[]; videosListId: number };
+    payload: { videosToSet: Video[]; videosListId: number; totalCount: number };
 };
 
 export type SetVideoDetail = {
