@@ -6,10 +6,8 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
         userState: { authorization },
     } = useUser();
 
-    const auth = authorization?.isAuthorized;
-
-    if (!auth) {
-        return <Navigate to="/splashScreen" />;
+    if (!authorization?.isAuthorized ) {
+        return <Navigate to="/splash-screen" state={{ tokenExipred: true }} />;
     }
 
     return children;

@@ -2,12 +2,13 @@ import { Card, CardMedia } from '@mui/material';
 import styled from 'styled-components';
 
 export const GameCard = styled(Card)`
-    padding-bottom: 14px;
     margin: 15px;
     text-align: center;
     box-shadow: 2px 2px 9px black;
     transition: transform 0.3s, background-color 0.3s, color 0.3s;
     cursor: pointer;
+    border-radius: 12px 12px 0 0;
+    height: 90%;
 
     &:hover {
         transform: scale(1.02);

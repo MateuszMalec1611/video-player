@@ -5,7 +5,7 @@ interface LoaderProps {
 }
 
 export const Box = styled.div<LoaderProps>`
-    margin: ${({ margin }) => (margin ? margin : 0)};
+    padding: ${({ margin }) => (margin ? margin : 0)};
     display: flex;
     justify-content: center;
     width: 100%;

@@ -4,13 +4,17 @@ export type ProviderValue = {
 };
 
 export interface VideosState {
-    videos: Video[];
-    videoDetail: VideoDetail | undefined;
-    videoPlayer: VideoPlayer | undefined;
+    videos?: {
+        videosList: { [key: string]: Video[] };
+        videoListTotalItems: { [key: string]: number };
+    };
+    videoDetail?: {
+        [key: string]: VideoDetail;
+    };
+    videoPlayer?: {
+        [key: string]: { video: VideoPlayer; streamType: StreamType };
+    };
     loading: boolean;
-    prevVideosListId: undefined | VideosListId;
-    prevVideoDetailId: undefined | number;
-    prevVideoId: undefined | number;
 }
 
 export interface Video {
@@ -47,7 +51,7 @@ export interface VideoPlayer {
 
 export type SetVideos = {
     type: VideosActionTypes.SET_VIDEOS;
-    payload: { videosToSet: Video[]; videosListId: number };
+    payload: { videosToSet: Video[]; videosListId: number; totalCount: number };
 };
 
 export type SetVideoDetail = {
@@ -57,7 +61,7 @@ export type SetVideoDetail = {
 
 export type SetVideoPlayer = {
     type: VideosActionTypes.SET_VIDEO_PLAYER;
-    payload: VideoPlayer;
+    payload: { videoPlayer: VideoPlayer; streamType: StreamType };
 };
 
 export type SetLoading = {

@@ -6,10 +6,9 @@ interface MoreInfoProps {
     title: string;
     shortDesc: string | boolean;
     description: string;
-    inner?: boolean;
 }
 
-const MoreInfo: React.FC<MoreInfoProps> = ({ title, shortDesc, description, inner }) => {
+const MoreInfo: React.FC<MoreInfoProps> = ({ title, shortDesc, description }) => {
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -17,13 +16,7 @@ const MoreInfo: React.FC<MoreInfoProps> = ({ title, shortDesc, description, inne
                 <S.GameShortDescription>{shortDesc}...</S.GameShortDescription>
             </AccordionSummary>
             <AccordionDetails>
-                {inner && (
-                    <S.GameDescription
-                        dangerouslySetInnerHTML={{
-                            __html: description,
-                        }}></S.GameDescription>
-                )}
-                {!inner && <S.GameDescription>{description}</S.GameDescription>}
+                <S.GameDescription>{description}</S.GameDescription>
             </AccordionDetails>
         </Accordion>
     );

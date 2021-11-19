@@ -1,33 +1,35 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import Loader from 'src/Components/Loader/Loader';
 import { useUser } from 'src/hooks/useUser';
+import Lottie from 'react-lottie';
+import animationData from 'src/lotties/tickets-animation.json';
 import * as S from './styles';
+
+const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {},
+};
 
 const SplashScreen = () => {
     const navigate = useNavigate();
     const {
-        userState: { loading, authorization },
-        handleSignInUser,
+        userState: { authorization },
+        handleAnonymousUser,
     } = useUser();
 
     useEffect(() => {
-        if (!authorization?.isAuthorized) handleSignInUser();
+        if (!authorization?.isAuthorized) handleAnonymousUser();
 
-        if (authorization?.isAuthorized) {
-            const timeOut = setTimeout(() => {
-                navigate('/', { replace: true });
-            }, 1000);
-
-            return () => clearTimeout(timeOut);
-        }
-    }, [navigate, authorization, handleSignInUser]);
+        if (authorization?.isAuthorized) navigate('/', { replace: true });
+    }, [authorization?.isAuthorized, handleAnonymousUser, navigate]);
 
     return (
         <S.Container>
-            <S.Title>Video Player</S.Title>
-            {loading && <Loader />}
-            {!loading && authorization?.isAuthorized && <S.Info>Successfully logged in</S.Info>}
+            <S.LottieWrapper>
+                <Lottie options={defaultOptions} />
+            </S.LottieWrapper>
             <S.HeroImage />
             <S.Shadow />
         </S.Container>

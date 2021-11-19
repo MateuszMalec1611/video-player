@@ -1,7 +1,8 @@
 export type ProviderValue = {
     userState: UserState;
     userDispatch: (action: UserActions) => void;
-    handleSignInUser: () => Promise<void>;
+    handleAnonymousUser: () => Promise<void>;
+    userIsAnonymous: boolean;
 };
 
 export interface UserState {
@@ -9,7 +10,6 @@ export interface UserState {
     user: User;
     loading: boolean;
 }
-
 export type User =
     | {
           FullName: string;
@@ -20,8 +20,8 @@ export type User =
 
 export type Authorization =
     | {
-          isAuthorized: boolean;
-          TokenExpires: string;
+          isAuthorized: boolean | undefined;
+          TokenExpires: string | undefined;
       }
     | undefined;
 

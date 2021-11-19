@@ -6,6 +6,7 @@ import Layout from './Components/Layout/Layout';
 import VideoDetail from './pages/VideoDetail/VideoDetail';
 import ProtectedRoute from './Components/ProtectedRoute/ProtectedRoute';
 import { VideosListId } from './store/Viedos/Videos.types';
+import Auth from './pages/Auth/Auth';
 
 const App = () => {
     return (
@@ -36,7 +37,8 @@ const App = () => {
                             </ProtectedRoute>
                         }
                     />
-                    <Route path="/splashScreen" element={<SplashScreen />} />
+                    <Route path="/splash-screen" element={<SplashScreen />} />
+                    <Route path="/auth" element={<Auth />} />
                 </Routes>
             </Container>
         </Layout>
